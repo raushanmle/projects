@@ -11,3 +11,6 @@ but feature code updated before this.
 adding code here
 
 added some code
+
+want to generate merge conflict
+
