@@ -15,4 +15,4 @@ added some code
 added code already to generate conflict
 
 
-added code to raise conflict
+added extra lines after conflict
