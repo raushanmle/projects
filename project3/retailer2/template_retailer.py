@@ -16,3 +16,6 @@ added code already to generate conflict
 
 
 added extra lines after conflict
+want to generate merge conflict
+
+
