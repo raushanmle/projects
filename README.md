@@ -6,14 +6,14 @@ mlconcept/README.md
 <hr>
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?color=0d8eceF&size=30&center=true&vCenter=true&width=550&height=70&lines=Hey+There+👋,+my-self+Raushan;Data+Scientist+💻;Loves+To+Build+Projects+🛠;A+Problem+Solver+🕵">
+  <img src="https://readme-typing-svg.herokuapp.com?color=0d8eceF&size=30&center=true&vCenter=true&width=550&height=70&lines=Hey+There+👋,+myself+Raushan;Data+Scientist+💻;Loves+To+Build+Projects+🛠;A+Problem+Solver+🕵">
 </p>
 
 <hr>
 
 ## About
 
-My-self Raushan Kumar, an energetic professional with a comprehensive background in analytics. Ability to handle multiple responsibilities, set priorities, communicate ideas to others, and respond positively to demanding situations.Experience in statistical tools and a keen communicator with strong problem solving, planning, presentation and people management skills.
+Myself Raushan Kumar, an energetic professional with a comprehensive background in analytics. Ability to handle multiple responsibilities, set priorities, communicate ideas to others, and respond positively to demanding situations.Experience in statistical tools and a keen communicator with strong problem solving, planning, presentation and people management skills.
 
 <table>
   <tr>
@@ -39,7 +39,7 @@ My-self Raushan Kumar, an energetic professional with a comprehensive background
 <hr>
 
 ```
- “ Believe in your self. This is the wheel of time and it'll change because change is permanent.”
+ “ Believe in yourself. This is the wheel of time and it'll change because change is permanent.”
                                                         ― An optimistic Coder
 ```
 
