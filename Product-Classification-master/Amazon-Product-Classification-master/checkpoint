@@ -1,0 +1,2 @@
+model_checkpoint_path: "3rd_NN_model"
+all_model_checkpoint_paths: "3rd_NN_model"
