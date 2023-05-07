@@ -1,16 +1,15 @@
+# Author : Raushan Kumar
+# Objective of this code : You'll learn working flow of forecsting models
 
-import pandas
-import numpy
+# Importing libraries
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from math import sqrt
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.stattools import adfuller
-%matplotlib inline
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import kpss
 import hurst
@@ -18,12 +17,25 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.statespace.varmax import VARMAX
 from scipy.stats.stats import pearsonr
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-df = pandas.read_excel(".\\AirQualityUCI.xlsx")
-df.head()
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
+from statsmodels.sandbox.regression.predstd import wls_prediction_std
+from urllib.request import urlopen
+np.set_printoptions(precision=4, suppress=True)
+pd.set_option("display.width", 100)
+from statsmodels.formula.api import ols
+from statsmodels.graphics.api import interaction_plot, abline_plot
+from statsmodels.stats.anova import anova_lm
+from statsmodels.stats.api import anova_lm
+%matplotlib inline
+
+
+df = pd.read_excel(".\\AirQualityUCI.xlsx")
 
 print (
-'Mean: ' , numpy. mean( df[ 'T' ]), 
-'Standard Deviation: ' , numpy. std( df[ 'T' ]),
+'Mean: ' , np. mean( df[ 'T' ]), 
+'Standard Deviation: ' , np. std( df[ 'T' ]),
 'Maximum Temperature: ' , max( df[ 'T' ]),'Minimum Temperature: ' , min( df[ 'T' ]))
 
 df['T_t-1'] = df['T'].shift(1)
@@ -114,11 +126,9 @@ print("H = {:.4f}, c = {:.4f}".format(H,c))
 model = ARIMA(train.values, order=(5, 0, 2))
 model_fit = model.fit()
 
-
 predictions = model_fit.predict(len(test))
-test_ = pandas.DataFrame(test)
+test_ = pd.DataFrame(test)
 test_['predictions'] = predictions[0:1871]
-
 
 plt.plot(df['T'])
 plt.plot(test_.predictions)
@@ -154,25 +164,18 @@ model_fit = model.fit()
 
 y_ = test_multi['C6H6(GT)'].values
 predicted = model_fit.predict(exog=y_)
-test_multi_ = pandas.DataFrame(test)
+test_multi_ = pd.DataFrame(test)
 test_multi_['predictions'] = predicted[0:1871]
 plt.plot(train_multi['T'])
 plt.plot(test_multi_['T'])
 plt.plot(test_multi_.predictions, '--')
 
-
-
-
-
-from statsmodels.tsa.holtwinters import ExponentialSmoothing
 model = ExponentialSmoothing(train.values, trend='add')
 model_fit = model.fit()
-
 
 predictions_ = model_fit.predict(len(test))
 plt.plot(test.values)
 plt.plot(predictions_[1:1871])
-
 
 prediction = []
 data = train.values
@@ -180,32 +183,26 @@ for t in test.values:
     model = (ExponentialSmoothing(data).fit())
     y = model.predict()
     prediction.append(y[0])
-    data = numpy.append(data, t)
+    data = np.append(data, t)
 
-
-test_ = pandas.DataFrame(test)
+test_ = pd.DataFrame(test)
 test_['predictionswf'] = prediction
-
 
 plt.plot(test_['T'])
 plt.plot(test_.predictionswf, '--')
 plt.show()
 
-
 error = sqrt(metrics.mean_squared_error(test.values,prediction))
 print ('Test RMSE for Triple Exponential Smoothing with Walk-Forward Validation: ', error)
 
-
-x = numpy.arange (1,500,1)
+x = np.arange (1,500,1)
 y = 0.4 * x + 30
 plt.plot(x,y)
 
-
 trainx, testx = x[0:int(0.8*(len(x)))], x[int(0.8*(len(x))):]
 trainy, testy = y[0:int(0.8*(len(y)))], y[int(0.8*(len(y))):]
-train = numpy.array(list(zip(trainx,trainy)))
-test = numpy.array(list(zip(trainx,trainy)))
-
+train = np.array(list(zip(trainx,trainy)))
+test = np.array(list(zip(trainx,trainy)))
 
 def create_dataset(n_X, look_back):
     dataX, dataY = [], []
@@ -213,109 +210,71 @@ def create_dataset(n_X, look_back):
         a = n_X[i:(i+look_back), ]
         dataX.append(a)
         dataY.append(n_X[i + look_back, ])
-    return numpy.array(dataX), numpy.array(dataY)
-
+    return np.array(dataX), np.array(dataY)
 
 look_back = 1
 trainx,trainy = create_dataset(train, look_back)
 testx,testy = create_dataset(test, look_back)
-trainx = numpy.reshape(trainx, (trainx.shape[0], 1, 2))
-testx = numpy.reshape(testx, (testx.shape[0], 1, 2))
+trainx = np.reshape(trainx, (trainx.shape[0], 1, 2))
+testx = np.reshape(testx, (testx.shape[0], 1, 2))
 
-
-pip install keras
-
-
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
 model = Sequential()
-
-
 model.add(LSTM(256, return_sequences = True, input_shape =(trainx.shape[1], 2)))
 model.add(LSTM(128,input_shape = (trainx.shape[1], 2)))
 model.add(Dense(2))
 model.compile(loss = 'mean_squared_error', optimizer = 'adam')
 model.fit(trainx, trainy, epochs = 2000, batch_size = 10, verbose = 2,
 shuffle = False)
-model.save_weights('LSTMBasic1.h5')
-
-
-model.load_weights('LSTMBasic1.h5')
+# model.save_weights('LSTMBasic1.h5')
+# model.load_weights('LSTMBasic1.h5')
 predict = model.predict(testx)
-
 
 plt.plot(testx.reshape(398,2)[:,0:1], testx.reshape(398,2)[:,1:2])
 plt.plot(predict[:,0:1], predict[:,1:2])
 
-
-x = numpy.arange (1,500,1)
-y = numpy.sin(x)
+x = np.arange (1,500,1)
+y = np.sin(x)
 plt.plot(x,y)
-
 
 trainx, testx = x[0:int(0.8*(len(x)))], x[int(0.8*(len(x))):]
 trainy, testy = y[0:int(0.8*(len(y)))], y[int(0.8*(len(y))):]
-train = numpy.array(list(zip(trainx,trainy)))
-test = numpy.array(list(zip(trainx,trainy)))
-
+train = np.array(list(zip(trainx,trainy)))
+test = np.array(list(zip(trainx,trainy)))
 
 look_back = 1
 trainx,trainy = create_dataset(train, look_back)
 testx,testy = create_dataset(test, look_back)
-trainx = numpy.reshape(trainx, (trainx.shape[0], 1, 2))
-testx = numpy.reshape(testx, (testx.shape[0], 1, 2))
-
+trainx = np.reshape(trainx, (trainx.shape[0], 1, 2))
+testx = np.reshape(testx, (testx.shape[0], 1, 2))
 
 model = Sequential()
 model.add(LSTM(512, return_sequences = True, input_shape =
 (trainx.shape[1], 2)))
 model.add(LSTM(256,input_shape = (trainx.shape[1], 2)))
 model.add(Dense(2))
-
-
 model.compile(loss = 'mean_squared_error', optimizer = 'adam')
 model.fit(trainx, trainy, epochs = 2000, batch_size = 10, verbose = 2,
 shuffle = False)
-model.save_weights('LSTMBasic2.h5')
-
-
-model.load_weights('LSTMBasic2.h5')
+# model.save_weights('LSTMBasic2.h5')
+# model.load_weights('LSTMBasic2.h5')
 predict = model.predict(testx)
-
 
 plt.plot(trainx.reshape(398,2)[:,0:1], trainx.reshape(398,2)[:,1:2])
 plt.plot(predict[:,0:1], predict[:,1:2])
 
- [markdown]
 # # Examples
-
-
-%matplotlib inline
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-import statsmodels.api as sm
-from statsmodels.sandbox.regression.predstd import wls_prediction_std
-
 np.random.seed(9876789)
-
-
 nsample = 100
 x = np.linspace(0, 10, 100)
 X = np.column_stack((x, x**2))
 beta = np.array([1, 0.1, 10])
 e = np.random.normal(size=nsample)
 
-
 X = sm.add_constant(X)
 y = np.dot(X, beta) + e
-
-
 model = sm.OLS(y, X)
 results = model.fit()
 print(results.summary())
-
 
 nsample = 50
 sig = 0.5
@@ -326,20 +285,15 @@ beta = [0.5, 0.5, -0.02, 5.]
 y_true = np.dot(X, beta)
 y = y_true + sig * np.random.normal(size=nsample)
 
-
 res = sm.OLS(y, X).fit()
 print(res.summary())
-
 
 print('Parameters: ', res.params)
 print('Standard errors: ', res.bse)
 print('Predicted values: ', res.predict())
 
-
 prstd, iv_l, iv_u = wls_prediction_std(res)
-
 fig, ax = plt.subplots(figsize=(8,6))
-
 ax.plot(x, y, 'o', label="data")
 ax.plot(x, y_true, 'b-', label="True")
 ax.plot(x, res.fittedvalues, 'r--.', label="OLS")
@@ -347,26 +301,10 @@ ax.plot(x, iv_u, 'r--')
 ax.plot(x, iv_l, 'r--')
 ax.legend(loc='best');
 
-
-from urllib.request import urlopen
-import numpy as np
-np.set_printoptions(precision=4, suppress=True)
-import pandas as pd
-pd.set_option("display.width", 100)
-import matplotlib.pyplot as plt
-from statsmodels.formula.api import ols
-from statsmodels.graphics.api import interaction_plot, abline_plot
-from statsmodels.stats.anova import anova_lm
-
-
 url = 'http://stats191.stanford.edu/data/salary.table'
 fh = urlopen(url)
 salary_table = pd.read_table(fh)
-salary_table.to_csv('salary.table')
-
-
-salary_table
-
+# salary_table.to_csv('salary.table')
 
 plt.figure(figsize=(6,6))
 symbols = ['D', '^']
@@ -379,22 +317,15 @@ for values, group in factor_groups:
 plt.xlabel('Experience');
 plt.ylabel('Salary');
 
-
 formula = 'S ~ C(E) + C(M) + X'
 lm = ols(formula, salary_table).fit()
 print(lm.summary())
 
-
 lm.model.exog
-
-
 infl = lm.get_influence()
 print(infl.summary_table())
 
-
 df_infl = infl.summary_frame()
-
-
 resid = lm.resid
 plt.figure(figsize=(6,6));
 for values, group in factor_groups:
@@ -406,12 +337,8 @@ for values, group in factor_groups:
 plt.xlabel('Group');
 plt.ylabel('Residuals');
 
-
 interX_lm = ols("S ~ C(E) * X + C(M)", salary_table).fit()
 print(interX_lm.summary())
-
-
-from statsmodels.stats.api import anova_lm
 
 table1 = anova_lm(lm, interX_lm)
 print(table1)
@@ -555,7 +482,7 @@ fig = plt.figure(figsize=(16,9))
 fig = res_glob.plot_diagnostics(fig=fig, lags=30)
 
 
-import numpy as np
+import np as np
 start = ind_prod.index[-24]
 forecast_index = pd.date_range(start, freq=ind_prod.index.freq, periods=36)
 cols = ['-'.join(str(val) for val in (idx.year, idx.month)) for idx in forecast_index]
@@ -594,7 +521,7 @@ print(res.summary())
 pip install statsmodels
 
 
-import numpy as np
+import np as np
 from scipy import stats
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -757,7 +684,7 @@ dta[["infl","unemp"]]
 
 
 import os
-import numpy as np
+import np as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
@@ -792,7 +719,7 @@ print("Figure 7.1: Oil production in Saudi Arabia from 1996 to 2007.")
 
 
 import os
-import numpy as np
+import np as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
