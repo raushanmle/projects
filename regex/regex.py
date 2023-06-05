@@ -1,14 +1,22 @@
-import re
-s = 'aaa@xxx.com bbb@yyy.com ccc@zzz.com ww.f333kart.com@ aaa@xyz.com'
+# Author: Raushan Kumar
 
+# importing re module
+import re
+# sample string
+s = 'aaa@xxx.com bbb@yyy.com ccc@zzz.com ww.f333kart.com@ aaa@xyz.com'
+# searching specific string
 a = re.search("a@",s)
+# query string occurance
 a.span()
-a[0]
+# what you queried
+a[1]
+# specific part of string
 s[2:4]
-#match any seq of three digit
+# match any seq of three digit
 re.search('[0-9][0-9][0-9]', 'foo456bar')
-#match any character in between 1 and 3 and (o-b)
+# match any character in between 1 and 3 and (o-b)
 re.search('1.3', 'foo1r3bar')
+re.match('a.*@', s)
 re.search('foo.bar', 'fooxbar')
 print(re.search('foo.bar', 'foobar'))
 
