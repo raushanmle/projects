@@ -51,34 +51,24 @@ imputer = KNNImputer(n_neighbors=2)
 imputer.fit_transform(X)
 # sorting values 
 data.sort_values('floors', ascending=True)
-
+# getting percentile distribution of price
 np.percentile(data['price'],range(0,100,10))
-
-
+# getting mode of price
 from scipy.stats import mode
 mode(data['price'])[0]
-data['Married'].fillna(mode(data['Married']).mode[0], inplace=True)
-
-
+# filling NA with mode
+data['price'].fillna(mode(data['price']).mode[0], inplace=True)
+# setting float format to 5 decimal places
 pd.set_option('display.float_format', lambda x: '%.5f' % x)
-
-
-data.pivot_table(values=["price"], index=["bedrooms","floors"], aggfunc=np.mean)
-
-
-(data.pivot_table(values = ['price'],index = ['bathrooms','bedrooms'],aggfunc = np.mean))
-
-
-data.merge(right=prop_rates, how='inner',left_on='Property_Area',right_index=True, sort=False)
+# pivoting data
+data.pivot_table(values=["price"], index=["bedrooms","floors"], aggfunc=np.mean).reset_index()
+# merging two DFs
 df1.merge(df2, left_on='lkey', right_on='rkey',suffixes=('_left', '_right'))
-df_new = pd.merge(left=df_AVERAG, right=df_COMPED, how='left',left_on='per_name',right_on='per_name')
-
+df_new = pd.merge(left = df_AVERAG, right=df_COMPED, how='left',left_on='per_name',right_on='per_name')
 
 import matplotlib.pyplot as plt
 %matplotlib inline
 data.boxplot(column="price")
-
-
 data[['bedrooms','bathrooms']].plot.line()
 
 
