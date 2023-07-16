@@ -178,3 +178,59 @@ re.search('a+', 'aaaAAA', re.I)
 re.sub("aaa","raus",s)
 re.sub("a","raus",s,1)
 re.sub("")
+
+
+
+
+
+import re
+t = 'as888-888-5587'
+string1 = "Hello, world. hey word \n"
+re.search(r".........", string1)
+re.search(r"l+o", string1)
+re.search(r"H.?e", string1) # 0 or 1 char in between H and e
+
+# Matches the preceding element zero or more times. For example, ab*c matches "ac", "abc", "abbbc", etc. [xyz]* matches "", "x", "y", "z", "zx", "zyx", "xyzzy", and so on. (ab)* matches "", "ab", "abab", "ababab", and so on.
+
+
+re.search(r"e(ll)*o", string1) #(ab) matches ababab only in this pattern any times
+
+
+re.search(r"^He", string1) #begins with
+re.search(r"rld$", string1) #ends with
+
+
+[abcx-z] matches "a", "b", "c", "x", "y", or "z", as does [a-cx-z].
+
+
+re.search(r"[aeioul]+", string1)
+
+
+re.search(r"[^abc]", string1)
+
+
+re.search(r"....[d]", string1) #match 4 chars before "."
+
+
+re.findall("@...........", s)
+
+
+s = 'aaa@xxx.com bbb@yyy.com ccc@zzz.com ww.f333kart.com@'
+print(re.sub('[a-z]*@', 'ABC@', s,3)) #substitute with value # last number how many time replacement shd be performed
+
+
+print(re.sub('[xyz23]', '1', s)) # any item matched will be replaced
+
+
+print(re.sub('aaa|bbb|ccc', 'ABC', s))
+
+
+print(re.sub('([a-z]*)@', '\\1-123@', s))
+
+
+t = re.subn('[a-z]*@', 'ABC@', s)
+t[0]
+
+
+re.sub('\d{3}', 'ABC', s) # replace that many times repeated digits to char
+#re.sub('\d', 'ABC', s)

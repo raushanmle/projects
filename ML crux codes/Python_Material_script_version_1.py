@@ -10,10 +10,10 @@ import matplotlib.pyplot as plt
 # Reading data
 data = pd.read_csv("kc_housingdata.csv")
 
-# Basic DF functions
+# Basic data functions
 # gives top 5 rows
 data.head()
-# gives shape of DF
+# gives shape of data
 data.shape
 # get size of variable in one column
 data.groupby('grade').size()
@@ -117,403 +117,128 @@ dict={}
 for i in data.columns:
     dict[i] = len(data[i])
     dict[i] = data[i].unique()
-    
-
-
-dict
-
 
 ((data['bathrooms'].append(data['bedrooms'])).unique())
+data.loc[lambda data: data['bedrooms'] > 3, :]
 
+(data.groupby(['floors', 'bedrooms']).sum())
 
-data.loc[lambda df: df['bedrooms'] > 3, :]
+(data.groupby(['floors', 'bedrooms']).sum().loc[lambda data: data['waterfront'] ==15])
 
+data.where(data['floors']>0)
 
-df.head()
+data.where(data.floors>0)
 
-
-(df.groupby(['floors', 'bedrooms']).sum())
-
-
-(df.groupby(['floors', 'bedrooms']).sum().loc[lambda df: df['waterfront'] ==15])
-
-
-df.where(df['floors']>0)
-
-
-df.where(df.floors>0)
-
-
-df.where(lambda df:df.floors == 1,lambda df: df['price'] + 1,axis = 'columns')
-
+data.where(lambda data:data.floors == 1,lambda data: data['price'] + 1,axis = 'columns')
 
 x=[1,2,3,4,5]
-
-
 lambda y:y*y
+data['color'] = data.Set.map( lambda x: 'red' if x == 'Z' else 'green')
+np.unique(data['condition'])
 
-
-z(x[3])
-
-
-df['color'] = df.Set.map( lambda x: 'red' if x == 'Z' else 'green')
-
-
-df.head()
-
-
-np.unique(df['type_of_flat'])
-
-
-df['type_of_flat']= ""
-
-
-(df['bedrooms'] <= 3)
-
-
-condition =[(df['bedrooms'] <= 3),((df['bedrooms']<=6) & (df['bedrooms']>3)),(df['bedrooms']>=7)]
+condition =[(data['bedrooms'] <= 3),((data['bedrooms']<=6) & (data['bedrooms']>3)),(data['bedrooms']>=7)]
 type_of_room = ['small','medium','large']
-df['type_of_flat']=np.select(condition,type_of_room,default='black')
+data['type_of_flat']=np.select(condition,type_of_room,default='black')
 
+data.groupby('type_of_flat')['id'].count()
 
-df.groupby('type_of_flat').count()
-
-
-#df = pd.DataFrame({'Type':list('ABBC'), 'Set':list('ZZXY')})
+data1 = pd.DataFrame({'Type':list('ABBC'), 'Set':list('ZZXY')})
 conditions = [
-    (df['Set'] == 'Z') & (df['Type'] == 'A'),
-    (df['Set'] == 'Z') & (df['Type'] == 'B'),
-    (df['Type'] == 'B')]
+    (data1['Set'] == 'Z') & (data1['Type'] == 'A'),
+    (data1['Set'] == 'Z') & (data1['Type'] == 'B'),
+    (data1['Type'] == 'B')]
 choices = ['yellow', 'blue', 'purple']
-df['color'] = np.select(conditions, choices, default='black')
-print(df)
+data1['color'] = np.select(conditions, choices, default='black')
+print(data1)
 
-
-df['type_of_flat'].value_counts()
-
-
+# Basics of linear regression
 from sklearn.linear_model import LinearRegression
-
-
 from sklearn.model_selection import train_test_split
-
-
-df.head()
-
-
-df1=df.drop('date',axis=1)
-
-
+# dropping unused columns
+df1=data.drop('date',axis=1)
+# creating dummy variables
 df1=pd.get_dummies(df1)
-
-
-x=df1
-y=df1['price']
-
-
+# setting target variable
+x = df1.drop(['price', 'id', 'zipcode'],axis=1)
+y = df1['price']
+# splitting data into train and test
 x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.20,random_state=400)
-
-
-x_train.shape,y_train.shape
-
-
-y_train.head()
-
-
-x_train.head()
-
-
+# creating linear regression object
 reg = LinearRegression()
-
-
-reg.fit(x_train.drop(['id','zipcode','price'],axis = 1),y_train)
-
-
-reg.score(x_test.drop(['id','zipcode','price'],axis = 1), y_test)
-
-
+# fitting model
+reg.fit(x_train,y_train)
+# evaluating model
+reg.score(x_test, y_test)
+# getting coefficients
 reg.coef_
-
-
+# getting intercept
 reg.intercept_
+x_predicted_data = pd.DataFrame(reg.predict(x_test),index=None)
 
-
-reg.singular_
-
-
-x_data = x_test.drop(['id','zipcode'],axis =1)
-
-
-x_predicted_data = pd.DataFrame(reg.predict(x_test.drop(['id','zipcode','price'],axis = 1)),index=None)
-
-
-x_data = x_data.reset_index()
-
-
-x_test['price'].reset_index()
-
-
-pd.concat([x_data,x_predicted_data,x_test['price'].reset_index()],axis=1)
-
-
-a1=x_test.drop(['id','zipcode','price'],axis =1).iloc[[0,1],:]
-
-
-a1
-
-
-reg.predict(a1)
-
-
-df.info()
-
-
-df3 = pd.read_csv("C:\\Users\\Raushan Kumar\\Downloads\IRIS.csv",header = None)
-
-
-df3['result']=np.where(df3[8]=='setosa',1,0)
-
-
+# Basics of logistic regression
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-
-
-df3.head()
-
-
-x=df3.drop(8,axis=1)
-y=df3.result
-
-
-x_train,x_test,y_train,y_test= train_test_split(x,y,test_size=.20,random_state=50)
-
-
+# importing dataset
+df3 = pd.read_csv("IRIS.csv")
+# creating target variable
+df3['result']=np.where(df3["species"]=='setosa',1,0)
+# creating x and y
+x = df3.drop(["species", "result"],axis=1)
+y = df3.result
+# splitting data into train and test
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=.20,random_state=50)
+# creating logistic regression object and fitting model
 clf = LogisticRegression(penalty='l2',random_state=10).fit(x_train,y_train)
-
-
+# predicting values
 clf.predict(x_test)
-
-
-y_test
-
-
+# evaluating model
 clf.score(x_test,y_test)
 
-
-df3
-
-
-from statsmodels.api import OLS
-
-
+# printing classification report
 from sklearn.metrics import classification_report
-
-
-x_train
-
-
-clf.predict(x_test)
-
-
 print(classification_report(clf.predict(x_test), y_test))
-
-
+# printing confusion matrix
 from sklearn.metrics import confusion_matrix
-
-
 confusion_matrix(y_test,clf.predict(x_test))
-
-
-import statsmodels.api as sm
-
-
-x=x_train.drop(['result'],axis=1)
-
-
-x
-
-
-logit_model=sm.Logit(y_train,x)
-
-
-#result=logit_model.fit()
-
 
 import pandas as pd
 import numpy as np
-from sklearn import datasets, linear_model
+from sklearn import datasets
 from sklearn.linear_model import LinearRegression
-import statsmodels.api as sm
 from scipy import stats
-
-
+# loading data and defining X, y
 diabetes = datasets.load_diabetes()
 X = diabetes.data
 y = diabetes.target
-
+# Model fitting
 lm = LinearRegression()
 lm.fit(X,y)
 params = np.append(lm.intercept_,lm.coef_)
 predictions = lm.predict(X)
 
-
 newX = pd.DataFrame({"Constant":np.ones(len(X))}).join(pd.DataFrame(X))
-
-
 MSE = (sum((y-predictions)**2))/(len(newX)-len(newX.columns))
 
-
 var_b = MSE*(np.linalg.inv(np.dot(newX.T,newX)).diagonal())
-
-
 sd_b = np.sqrt(var_b)
-
-
 ts_b = params/ sd_b
-
-
 p_values =[2*(1-stats.t.cdf(np.abs(i),((len(newX)*newX.shape[1])-len(newX[0])))) for i in ts_b]
-
-
-p_values
-
-
-2 * (1 - stats.t.cdf(np.abs(self.t), y.shape[0] - X.shape[1]))
-
-
-stats.t.cdf()
-
-
-[(np.abs(i),i) for i in ts_b]
-
-
-len(df3),len(df3[0])
-
-
-len(newX),len(newX[0])
-
-
-[2*(1-stats.t.cdf(np.abs(i),(len(newX)-len(newX[0])))) for i in ts_b]
-
-
-
-
-
-
-# Note if you don't want to use a DataFrame replace the two lines above with
-# newX = np.append(np.ones((len(X),1)), X, axis=1)
-# MSE = (sum((y-predictions)**2))/(len(newX)-len(newX[0]))
-
-
-
-
-
-p_values =[2*(1-stats.t.cdf(np.abs(i),((len(newX)*newX.shape[1])-len(newX[0])))) for i in ts_b]
-
-sd_b = np.round(sd_b,3)
-ts_b = np.round(ts_b,3)
-p_values = np.round(p_values,3)
-params = np.round(params,4)
-
 myDF3 = pd.DataFrame()
 myDF3["Coefficients"],myDF3["Standard Errors"],myDF3["t values"],myDF3["Probabilities"] = [params,sd_b,ts_b,p_values]
 print(myDF3)
 
-
-x= "abcs dfer"
-y={'a','c'}
-z=[]
-[z.append(x.replace(i,"")) for i in y]
-
-
-import re
-
-
-t = 'as888-888-5587'
-
-
-string1 = "Hello, world. hey word \n"
-
-
-re.search(r".........", string1)
-
-
-re.search(r"l+o", string1)
-
-
-re.search(r"H.?e", string1) # 0 or 1 char in between H and e
-
-
-Matches the preceding element zero or more times. For example, ab*c matches "ac", "abc", "abbbc", etc. [xyz]* matches "", "x", "y", "z", "zx", "zyx", "xyzzy", and so on. (ab)* matches "", "ab", "abab", "ababab", and so on.
-
-
-re.search(r"e(ll)*o", string1) #(ab) matches ababab only in this pattern any times
-
-
-re.search(r"^He", string1) #begins with
-re.search(r"rld$", string1) #ends with
-
-
-[abcx-z] matches "a", "b", "c", "x", "y", or "z", as does [a-cx-z].
-
-
-re.search(r"[aeioul]+", string1)
-
-
-re.search(r"[^abc]", string1)
-
-
-re.search(r"....[d]", string1) #match 4 chars before "."
-
-
-re.findall("@...........", s)
-
-
-s = 'aaa@xxx.com bbb@yyy.com ccc@zzz.com ww.f333kart.com@'
-print(re.sub('[a-z]*@', 'ABC@', s,3)) #substitute with value # last number how many time replacement shd be performed
-
-
-print(re.sub('[xyz23]', '1', s)) # any item matched will be replaced
-
-
-print(re.sub('aaa|bbb|ccc', 'ABC', s))
-
-
-print(re.sub('([a-z]*)@', '\\1-123@', s))
-
-
-t = re.subn('[a-z]*@', 'ABC@', s)
-t[0]
-
-
-re.sub('\d{3}', 'ABC', s) # replace that many times repeated digits to char
-#re.sub('\d', 'ABC', s)
-
-
+# basic input practice
 x=input()
-
-
 var = x.split(" ")
-
-
 j=0
 for i in range(2):
     if int(var[i+1])-int(var[i])<0:
         j=j+1
 
-
 x,y,z=(input()).split(" ")
 
-
-x
-
-
 name = input()
-
 name2=input()
-
-
-
 var = name2.split(" ")
 j=0
 for i in range(0,(int(name)-1)):
@@ -525,10 +250,6 @@ for i in range(0,(int(name)-1)):
                 j=j+1
 print(j+1)
 
-
-y=6
-
-
 for i in range(1,int(y)):
     if i>1:
         for j in range(2,i):
@@ -536,7 +257,6 @@ for i in range(1,int(y)):
                 break
         else:
             print(i)
- 
 
 
 lower = int(input("Enter lower range: "))  
@@ -550,16 +270,10 @@ for j in range(1,upper + 1):
                 break  
             else:  
                 k.append(j)  
-        
-
-
-k=[2,3,4]
-
 
 mul=1
 for l in k:
         mul=mul*l
-
 
 def mult(x):
     total =1
@@ -567,14 +281,13 @@ def mult(x):
         total=total*i
     return total
 
-
+# loading sk learn sample dataset
 from sklearn import datasets
 import numpy as np
 iris = datasets.load_iris()
 X = iris.data[:, [2, 3]]
 y = iris.target
 print('Class labels:', np.unique(y))
-
 
 from matplotlib.colors import ListedColormap
 import matplotlib.pyplot as plt
@@ -603,22 +316,16 @@ def plot_decision_regions(X, y, classifier, test_idx=None,resolution=0.02):
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1, stratify=y)
-
-
 print('Labels counts in y:', np.bincount(y))
-
-
 from sklearn.preprocessing import StandardScaler
 sc = StandardScaler()
 sc.fit(X_train)
 X_train_std = sc.transform(X_train)
 X_test_std = sc.transform(X_test)
 
-
 from sklearn.linear_model import Perceptron
 ppn = Perceptron(max_iter=40, eta0=0.1, random_state=1)
 ppn.fit(X_train_std, y_train)
-
 
 y_pred = ppn.predict(X_test_std)
 print('Misclassified samples: %d' % (y_test != y_pred).sum())
@@ -629,12 +336,6 @@ print('Accuracy: %.3f' % accuracy_score(y_test, y_pred))
 
 
 print('Accuracy: %.2f' % ppn.score(X_test_std, y_test))
-
-
-X_test_std.shape
-
-
-X_combined_std.shape
 
 
 X_combined_std = np.vstack((X_train_std, X_test_std))
@@ -663,13 +364,11 @@ plt.show()
 
 from sklearn.svm import SVC
 
-
 svm = SVC(kernel='rbf', random_state=1, gamma=0.10, C=10.0)
 svm.fit(X_xor, y_xor)
 plot_decision_regions(X_xor, y_xor, classifier=svm)
 plt.legend(loc='upper left')
 plt.show()
-
 
 svm = SVC(kernel='rbf', random_state=1, gamma=0.2, C=1.0)
 svm.fit(X_train_std, y_train)
@@ -723,16 +422,7 @@ corr_matrix = iris_data.corr()
 corr_matrix['sepal length (cm)'].sort_values(ascending=False)
 
 
-import os
-import tarfile
-from six.moves import urllib
-
-
 housing = pd.read_csv("C:\\Users\\Raushan Kumar\\Downloads\housing.csv")
-
-
-df.info()
-
 
 from pandas.plotting import scatter_matrix
 attributes = ["median_house_value", "median_income", "total_rooms",
@@ -844,32 +534,19 @@ x_train,x_test,y_train,y_test=train_test_split(housing_prepared[:,:8],housing_pr
 
 
 from sklearn.linear_model import LinearRegression
-
-
 lin_reg = LinearRegression()
 lin_reg.fit(x_train,y_train)
-
-
 from sklearn.metrics import mean_squared_error
 housing_predictions = lin_reg.predict(x_test)
 lin_mse = mean_squared_error(y_test, housing_predictions)
 lin_rmse = np.sqrt(lin_mse)
-lin_rmse
-
-
 from sklearn.model_selection import StratifiedShuffleSplit
-
-
 housing["income_cat"] = np.ceil(housing["median_income"] / 1.5)
 housing["income_cat"].where(housing["income_cat"] < 5, 5.0, inplace=True)
 split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
 for train_index, test_index in split.split(housing, housing["income_cat"]):
     strat_train_set = housing.loc[train_index]
     strat_test_set = housing.loc[test_index]
-
-
-strat_train_set
-
 
 from pandas.plotting import scatter_matrix
 attributes = ["median_house_value", "median_income", "total_rooms",
@@ -891,23 +568,15 @@ housing_cat_encoded = encoder.fit_transform(housing_cat)
 housing_cat_encoded
 print(encoder.classes_)
 
-
-x_train_housing = 
-
-
 from sklearn.tree import DecisionTreeRegressor
-
 
 tree_reg = DecisionTreeRegressor()
 tree_reg.fit(housing_prepared,Y)
-
 
 from sklearn.metrics import mean_squared_error
 housing_predictions = tree_reg.predict(housing_prepared)
 tree_mse = mean_squared_error(Y, housing_predictions)
 tree_rmse = np.sqrt(tree_mse)
-tree_rmse
-
 
 from sklearn.model_selection import cross_val_score
 scores = cross_val_score(tree_reg, housing_prepared,Y,scoring="neg_mean_squared_error", cv=10)
@@ -923,7 +592,6 @@ display_scores(tree_rmse_scores)
 
 from sklearn.model_selection import GridSearchCV
 
-
 param_grid = [
 {'n_estimators': [3, 10, 30], 'max_features': [2, 4, 6, 8]},
 {'bootstrap': [False], 'n_estimators': [3, 10], 'max_features': [2, 3, 4]},
@@ -934,7 +602,6 @@ from sklearn.ensemble import RandomForestRegressor
 forest_reg = RandomForestRegressor()
 grid_search = GridSearchCV(forest_reg, param_grid, cv=5,scoring='neg_mean_squared_error')
 grid_search.fit(housing_prepared,Y)
-
 
 grid_search.cv_results_
 
