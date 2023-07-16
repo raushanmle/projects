@@ -33,14 +33,14 @@ data.dropna(how='all')
 # Drop row if it does not have at least two values that are **not** NaN
 data.dropna(thresh=2)
 # Drop only if NaN in specific column (as asked in the question)
-data.dropna(subset=[1])
+data.dropna(subset=['price'])
 # fill NA with zero
 data.fillna(0)
 # fill value just above from cell
 data.fillna(method='ffill')
 #fill value with column data given in dict
 values = {'A': 0, 'B': 1, 'C': 2, 'D': 3}
-data.fillna(value=values) 
+data.fillna(value=values)
 data.fillna(value=values, limit=1)
 
 # imputing values with sk-learn imputer
@@ -66,90 +66,52 @@ data.pivot_table(values=["price"], index=["bedrooms","floors"], aggfunc=np.mean)
 df1.merge(df2, left_on='lkey', right_on='rkey',suffixes=('_left', '_right'))
 df_new = pd.merge(left = df_AVERAG, right=df_COMPED, how='left',left_on='per_name',right_on='per_name')
 
+# plotting
+# plotting boxplot
 import matplotlib.pyplot as plt
 %matplotlib inline
 data.boxplot(column="price")
+# plotting through line
 data[['bedrooms','bathrooms']].plot.line()
-
-
-data.hist(column="bedrooms",by="price",bins=2)
-
-
-np.unique(data['bedrooms'])
-
-
-bined = [0,5,10,15,20,25,30,35]
+# plotting histogram
+data.hist(column="bedrooms",by="price",bins=200000)
+# plotting scatter
+data.plot.scatter(x='bedrooms',y='price')
+# plotting bar
+data['bedrooms'].value_counts().plot.bar()
+# plotting pie
+data['bedrooms'].value_counts().plot.pie()
+# getting bin value counts pandas
 grp_level = ['a','b','c','d','e','f','g']
-#pd.cut(data['bedrooms'],bined,labels=grp_level)
-data['binned'] = pd.cut(data['bedrooms'],bined)
+bined = [0,5,10,15,20,25,30,35]
+pd.cut(data['bedrooms'], bined,labels=grp_level)
 data['binned'].value_counts()
-
-
-
+# getting quantile distribution
 quants = [0.05, 0.25, 0.5, 0.75, 0.95]
-data.quantile(quants)
-
-
+data['bathrooms'].quantile(quants)
+# getting quantile distribution
 import matplotlib.pyplot as plt
 count, bins = np.histogram(data['price'],bins=5)
 plt.hist(data['price'],bins=5,color='gray',edgecolor='white')
-
-
+# getting index of min value
 data['price'].idxmin()
-
-
+# getting index of max value
+data['price'].idxmax()
+# getting index of values greater than 800000
 print(data[data['price']>800000].index.values)
-
-
-data['price'].idxmin()
-
-
-data.head()
-
-
-1>(data['price'].quantile(q=[.8]))
-
-
+# getting unique values of a column
 data['price'].nunique()
-
-
+# getting data type each column
 data.dtypes
 
-
-data['price'].quantile(q=[.8,.9])
-
-
-y
-
-
-y = list(x)[0]
-
-
 data[data['price'] > y]
-
-
+# sorting values
 data.sort_values(by='price')
-
-
+# getting unique values of each column
 for i in data.columns:
-    x = data[i].unique()
-    
-
-
+    print(data[i].unique())
+# getting unique values of a columns
 data[['price','bedrooms']]
-
-
-df1 = data['bathrooms'].unique()
-
-
-df2 = data['bedrooms'].unique()
-
-
-dict = {}
-
-
-dict['bedrooms']=df2
-
 
 dict={}
 for i in data.columns:
