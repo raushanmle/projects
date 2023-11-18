@@ -21,20 +21,33 @@ df[df["bedrooms"] != 3]
 # Select specific columns based on condition
 df.loc[df["bedrooms"] != 3, ["price", "sqft_living"]]
 
-df.iloc[3]
-
-# By integer slices
+# Show specific row
+df.iloc[1]
+# SHow specific range rows
+df.iloc[3:5]
+# SHow specific range rows & columns
 df.iloc[3:5, 0:2]
-
 # By lists of integer position locations, similar to the numpy/python style
 df.iloc[[1, 2, 4], [0, 2]]
+# Selecting specific columns and all rows
+df.iloc[:, 1:3]
+# Select based on multiple condition
+conditions = [
+    (df['bedrooms'] == 3), (df['bathrooms'] == 1),
+    (df['floors'] == 1), (df['grade'] == 7)]
+choices = ['3-bed', 'single', 'first-floor', "high-grade"]
+df['type-of-house'] = np.select(conditions, choices, default='no-class')
+
+# DataFrame merge
+df_zip_code = df.drop_duplicates("zipcode")[["zipcode", "lat", "long"]].rename(columns={"lat": "lat_updated", "long": "long_updated"})
+df_add_updated = pd.merge(df, df_zip_code, on = ["zipcode"], how = "left")
+pd.merge(df, df_zip_code, on = ["zipcode"], how = "right")
+
+pd.merge(df, df_zip_code, on = ["zipcode"], how = "inner")
 
 
 
 
-df.merge(right=prop_rates, how='inner',left_on='Property_Area',right_index=True, sort=False)
-df1.merge(df2, left_on='lkey', right_on='rkey',suffixes=('_left', '_right'))
-df_new = pd.merge(left=df_AVERAG, right=df_COMPED, how='left',left_on='per_name',right_on='per_name')
 
 
 import matplotlib.pyplot as plt
@@ -73,7 +86,7 @@ df.loc[lambda df: df['bedrooms'] > 3, :]
 df.head()
 
 
-df.where(df['floors']>0)
+
 
 
 df.where(df.floors>0)
