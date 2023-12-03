@@ -5,31 +5,26 @@ import seaborn as sns # statistical data visualization
 from pathlib import Path
 %matplotlib inline
 import os
-
+# set to show decimal places up to 5
+pd.set_option('display.float_format', lambda x: '%.3f' % x)
+# set the maximum number of rows and columns to display
+pd.set_option('display.max_rows', 50)
+pd.set_option('display.max_columns', 50)
 
 
 df = pd.read_csv(str(Path().resolve().parent) + "\\4. DataFrame\\sample-data\\weather.csv")
 
 # Now, I will explore the data to gain insights about the data. 
-
 # view dimensions of dataset
 df.shape
-
-# preview the dataset
 df.head()
-
 df.columns
 
-# ### Drop  RISK_MM variable
-# It is given in the dataset description, that we should drop the `RISK_MM` feature variable from the dataset description. So, we 
-# should drop it as follows-
-df.drop(['RISK_MM'], axis=1, inplace=True)
 # view summary of dataset
 df.info()
 # We can see that the data type of `Date` variable is object. I will parse the date currently coded as object into datetime format.
 
 # parse the dates, currently coded as strings, into datetime format
-
 df['Date'] = pd.to_datetime(df['Date'])
 # extract year from date
 df['Year'] = df['Date'].dt.year
@@ -41,260 +36,32 @@ df['Day'] = df['Date'].dt.day
 # We can see that there are three additional columns created from `Date` variable. Now, I will drop the original `Date` variable from the dataset.
 
 # drop the original Date variable
-
 df.drop('Date', axis=1, inplace = True)
-# Now, we can see that the `Date` variable has been removed from the dataset.
-# ### Explore Categorical Variables
 # Now, I will explore the categorical variables one by one. 
 # find categorical variables
 
 categorical = [var for var in df.columns if df[var].dtype=='O']
-
-# We can see that there are 6 categorical variables in the dataset. The `Date` variable has been removed. First, I will check missing values in categorical variables.
-
 # check for missing values in categorical variables 
-
 df[categorical].isnull().sum()
-
-
-# We can see that `WindGustDir`, `WindDir9am`, `WindDir3pm`, `RainToday` variables contain missing values. I will explore these variables one by one.
-
-
-# ### Explore `Location` variable
-
-
-# print number of labels in Location variable
-
-print('Location contains', len(df.Location.unique()), 'labels')
-
-
-# check labels in location variable
-
-df.Location.unique()
-
-
-# check frequency distribution of values in Location variable
-
-df.Location.value_counts()
-
-
 # let's do One Hot Encoding of Location variable
 # get k-1 dummy variables after One Hot Encoding 
 # preview the dataset with head() method
-
-pd.get_dummies(df.Location, drop_first=True).head()
-
-
-# ### Explore `WindGustDir` variable
-
-
-# print number of labels in WindGustDir variable
-
-print('WindGustDir contains', len(df['WindGustDir'].unique()), 'labels')
-
-
-# check labels in WindGustDir variable
-
-df['WindGustDir'].unique()
-
-
-# check frequency distribution of values in WindGustDir variable
-
-df.WindGustDir.value_counts()
-
-
-# let's do One Hot Encoding of WindGustDir variable
-# get k-1 dummy variables after One Hot Encoding 
-# also add an additional dummy variable to indicate there was missing data
-# preview the dataset with head() method
-
-pd.get_dummies(df.WindGustDir, drop_first=True, dummy_na=True).head()
-
-
-# sum the number of 1s per boolean variable over the rows of the dataset
-# it will tell us how many observations we have for each category
-
-pd.get_dummies(df.WindGustDir, drop_first=True, dummy_na=True).sum(axis=0)
-
-
-# We can see that there are 9330 missing values in WindGustDir variable.
-
-
-# ### Explore `WindDir9am` variable
-
-
-# print number of labels in WindDir9am variable
-
-print('WindDir9am contains', len(df['WindDir9am'].unique()), 'labels')
-
-
-# check labels in WindDir9am variable
-
-df['WindDir9am'].unique()
-
-
-# check frequency distribution of values in WindDir9am variable
-
-df['WindDir9am'].value_counts()
-
-
-# let's do One Hot Encoding of WindDir9am variable
-# get k-1 dummy variables after One Hot Encoding 
-# also add an additional dummy variable to indicate there was missing data
-# preview the dataset with head() method
-
-pd.get_dummies(df.WindDir9am, drop_first=True, dummy_na=True).head()
-
-
-# sum the number of 1s per boolean variable over the rows of the dataset
-# it will tell us how many observations we have for each category
-
-pd.get_dummies(df.WindDir9am, drop_first=True, dummy_na=True).sum(axis=0)
-
-
-# We can see that there are 10013 missing values in the `WindDir9am` variable.
-
-
-# ### Explore `WindDir3pm` variable
-
-
-# print number of labels in WindDir3pm variable
-
-print('WindDir3pm contains', len(df['WindDir3pm'].unique()), 'labels')
-
-
-# check labels in WindDir3pm variable
-
-df['WindDir3pm'].unique()
-
-
-# check frequency distribution of values in WindDir3pm variable
-
-df['WindDir3pm'].value_counts()
-
-
-# let's do One Hot Encoding of WindDir3pm variable
-# get k-1 dummy variables after One Hot Encoding 
-# also add an additional dummy variable to indicate there was missing data
-# preview the dataset with head() method
-
-pd.get_dummies(df.WindDir3pm, drop_first=True, dummy_na=True).head()
-
-
-# sum the number of 1s per boolean variable over the rows of the dataset
-# it will tell us how many observations we have for each category
-
-pd.get_dummies(df.WindDir3pm, drop_first=True, dummy_na=True).sum(axis=0)
-
-
-# There are 3778 missing values in the `WindDir3pm` variable.
-
-
-# ### Explore `RainToday` variable
-
-
-# print number of labels in RainToday variable
-
-print('RainToday contains', len(df['RainToday'].unique()), 'labels')
-
-
-# check labels in WindGustDir variable
-
-df['RainToday'].unique()
-
-
-# check frequency distribution of values in WindGustDir variable
-
-df.RainToday.value_counts()
-
-
-# let's do One Hot Encoding of RainToday variable
-# get k-1 dummy variables after One Hot Encoding 
-# also add an additional dummy variable to indicate there was missing data
-# preview the dataset with head() method
-
-pd.get_dummies(df.RainToday, drop_first=True, dummy_na=True).head()
-
-
-# sum the number of 1s per boolean variable over the rows of the dataset
-# it will tell us how many observations we have for each category
-
-pd.get_dummies(df.RainToday, drop_first=True, dummy_na=True).sum(axis=0)
-
-
-# There are 1406 missing values in the `RainToday` variable.
-
-
+pd.DataFrame(df.isna().sum() * 100 /df.shape[0])
 # ### Explore Numerical Variables
-
-
 # find numerical variables
 
 numerical = [var for var in df.columns if df[var].dtype!='O']
-
-print('There are {} numerical variables\n'.format(len(numerical)))
-
-print('The numerical variables are :', numerical)
-
-
-# view the numerical variables
-
-df[numerical].head()
-
-
-# ### Summary of numerical variables
-# 
-# 
-# - There are 16 numerical variables. 
-# 
-# 
-# - These are given by `MinTemp`, `MaxTemp`, `Rainfall`, `Evaporation`, `Sunshine`, `WindGustSpeed`, `WindSpeed9am`, `WindSpeed3pm`, `Humidity9am`, `Humidity3pm`, `Pressure9am`, `Pressure3pm`, `Cloud9am`, `Cloud3pm`, `Temp9am` and `Temp3pm`.
-# 
-# 
-# - All of the numerical variables are of continuous type.
-
-
-# ## Explore problems within numerical variables
-# 
-# 
-# Now, I will explore the numerical variables.
-# 
-# 
-# ### Missing values in numerical variables
-
-
-# check missing values in numerical variables
-
 df[numerical].isnull().sum()
 
-
 # We can see that all the 16 numerical variables contain missing values.
-
-
-# ### Outliers in numerical variables
-
-
-# view summary statistics in numerical variables
-
-print(round(df[numerical].describe()),2)
-
-
-# On closer inspection, we can see that the `Rainfall`, `Evaporation`, `WindSpeed9am` and `WindSpeed3pm` columns may contain outliers.
-# 
-# 
-# I will draw boxplots to visualise outliers in the above variables. 
-
-
+# Outliers in numerical variables
 # draw boxplots to visualize outliers
 
 plt.figure(figsize=(15,10))
-
-
 plt.subplot(2, 2, 1)
 fig = df.boxplot(column='Rainfall')
 fig.set_title('')
 fig.set_ylabel('Rainfall')
-
 
 plt.subplot(2, 2, 2)
 fig = df.boxplot(column='Evaporation')
@@ -315,98 +82,41 @@ fig.set_ylabel('WindSpeed3pm')
 
 
 # The above boxplots confirm that there are lot of outliers in these variables.
-
-
-# ### Check the distribution of variables
-# 
-# 
+# Check the distribution of variables
 # Now, I will plot the histograms to check distributions to find out if they are normal or skewed. If the variable follows normal distribution, then I will do `Extreme Value Analysis` otherwise if they are skewed, I will find IQR (Interquantile range).
-
 
 # plot histogram to check distribution
 
 plt.figure(figsize=(15,10))
-
-
 plt.subplot(2, 2, 1)
 fig = df.Rainfall.hist(bins=10)
 fig.set_xlabel('Rainfall')
 fig.set_ylabel('RainTomorrow')
-
 
 plt.subplot(2, 2, 2)
 fig = df.Evaporation.hist(bins=10)
 fig.set_xlabel('Evaporation')
 fig.set_ylabel('RainTomorrow')
 
-
 plt.subplot(2, 2, 3)
 fig = df.WindSpeed9am.hist(bins=10)
 fig.set_xlabel('WindSpeed9am')
 fig.set_ylabel('RainTomorrow')
-
 
 plt.subplot(2, 2, 4)
 fig = df.WindSpeed3pm.hist(bins=10)
 fig.set_xlabel('WindSpeed3pm')
 fig.set_ylabel('RainTomorrow')
 
-
 # We can see that all the four variables are skewed. So, I will use interquantile range to find outliers.
-
-
 # find outliers for Rainfall variable
 
-IQR = df.Rainfall.quantile(0.75) - df.Rainfall.quantile(0.25)
-Lower_fence = df.Rainfall.quantile(0.25) - (IQR * 3)
-Upper_fence = df.Rainfall.quantile(0.75) + (IQR * 3)
-print('Rainfall outliers are values < {lowerboundary} or > {upperboundary}'.format(lowerboundary=Lower_fence, upperboundary=Upper_fence))
+for num_var in numerical:
 
-
-
-# For `Rainfall`, the minimum and maximum values are 0.0 and 371.0. So, the outliers are values > 3.2.
-
-
-# find outliers for Evaporation variable
-
-IQR = df.Evaporation.quantile(0.75) - df.Evaporation.quantile(0.25)
-Lower_fence = df.Evaporation.quantile(0.25) - (IQR * 3)
-Upper_fence = df.Evaporation.quantile(0.75) + (IQR * 3)
-print('Evaporation outliers are values < {lowerboundary} or > {upperboundary}'.format(lowerboundary=Lower_fence, upperboundary=Upper_fence))
-
-
-
-# For `Evaporation`, the minimum and maximum values are 0.0 and 145.0. So, the outliers are values > 21.8.
-
-
-# find outliers for WindSpeed9am variable
-
-IQR = df.WindSpeed9am.quantile(0.75) - df.WindSpeed9am.quantile(0.25)
-Lower_fence = df.WindSpeed9am.quantile(0.25) - (IQR * 3)
-Upper_fence = df.WindSpeed9am.quantile(0.75) + (IQR * 3)
-print('WindSpeed9am outliers are values < {lowerboundary} or > {upperboundary}'.format(lowerboundary=Lower_fence, upperboundary=Upper_fence))
-
-
-
-# For `WindSpeed9am`, the minimum and maximum values are 0.0 and 130.0. So, the outliers are values > 55.0.
-
-
-# find outliers for WindSpeed3pm variable
-
-IQR = df.WindSpeed3pm.quantile(0.75) - df.WindSpeed3pm.quantile(0.25)
-Lower_fence = df.WindSpeed3pm.quantile(0.25) - (IQR * 3)
-Upper_fence = df.WindSpeed3pm.quantile(0.75) + (IQR * 3)
-print('WindSpeed3pm outliers are values < {lowerboundary} or > {upperboundary}'.format(lowerboundary=Lower_fence, upperboundary=Upper_fence))
-
-
-
-# For `WindSpeed3pm`, the minimum and maximum values are 0.0 and 87.0. So, the outliers are values > 57.0.
-
-
-# # **8. Declare feature vector and target variable** <a class="anchor" id="8"></a>
-# 
-# 
-# [Table of Contents](#0.1)
+    IQR = df[num_var].quantile(0.75) - df[num_var].quantile(0.25)
+    Lower_fence = df[num_var].quantile(0.25) - (IQR * 3)
+    Upper_fence = df[num_var].quantile(0.75) + (IQR * 3)
+    print('{num_var} outliers are values < {lowerboundary} or > {upperboundary}'.format(num_var = num_var, lowerboundary=Lower_fence, upperboundary=Upper_fence))
 
 
 X = df.drop(['RainTomorrow'], axis=1)
@@ -414,12 +124,7 @@ X = df.drop(['RainTomorrow'], axis=1)
 y = df['RainTomorrow']
 
 
-# # **9. Split data into separate training and test set** <a class="anchor" id="9"></a>
-# 
-# 
-# [Table of Contents](#0.1)
-
-
+# Split data into separate training and test set
 # split X and y into training and testing sets
 
 from sklearn.model_selection import train_test_split
@@ -431,15 +136,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, rando
 # check the shape of X_train and X_test
 
 X_train.shape, X_test.shape
-
-
-# # **10. Feature Engineering** <a class="anchor" id="10"></a>
-# 
-# 
-# [Table of Contents](#0.1)
-# 
-# 
-# **Feature Engineering** is the process of transforming raw data into useful features that help us to understand our model better and increase its predictive power. I will carry out feature engineering on different types of variables.
+ 
+# Feature Engineering is the process of transforming raw data into useful features that help us to understand our model better and increase its predictive power. I will carry out feature engineering on different types of variables.
 # 
 # 
 # First, I will display the categorical and numerical variables again separately.
@@ -447,22 +145,16 @@ X_train.shape, X_test.shape
 
 # check data types in X_train
 
-X_train.dtypes
-
-
 # display categorical variables
 
 categorical = [col for col in X_train.columns if X_train[col].dtypes == 'O']
 
-categorical
+
 
 
 # display numerical variables
 
 numerical = [col for col in X_train.columns if X_train[col].dtypes != 'O']
-
-numerical
-
 
 # ### Engineering missing values in numerical variables
 # 
@@ -1412,8 +1104,6 @@ print('GridSearch CV score on test set: {0:0.4f}'.format(grid_search.score(X_tes
 # # **21. Results and conclusion** <a class="anchor" id="21"></a>
 # 
 # 
-# [Table of Contents](#0.1)
-
 
 # 1.	The logistic regression model accuracy score is 0.8501. So, the model does a very good job in predicting whether or not it will rain tomorrow in Australia.
 # 
@@ -1435,54 +1125,4 @@ print('GridSearch CV score on test set: {0:0.4f}'.format(grid_search.score(X_tes
 # 
 # 10.	Our original model test accuracy is 0.8501 while GridSearch CV accuracy is 0.8507. We can see that GridSearch CV improve the performance for this particular model.
 # 
-
-
-# # **22. References** <a class="anchor" id="22"></a>
-# 
-# 
-# [Table of Contents](#0.1)
-# 
-# 
-# 
-# The work done in this project is inspired from following books and websites:-
-# 
-# 
-# 1. Hands on Machine Learning with Scikit-Learn and Tensorflow by Aurélién Géron
-# 
-# 2. Introduction to Machine Learning with Python by Andreas C. Müller and Sarah Guido
-# 
-# 3. Udemy course – Machine Learning – A Z by Kirill Eremenko and Hadelin de Ponteves
-# 
-# 4. Udemy course – Feature Engineering for Machine Learning by Soledad Galli
-# 
-# 5. Udemy course – Feature Selection for Machine Learning by Soledad Galli
-# 
-# 6. https://en.wikipedia.org/wiki/Logistic_regression
-# 
-# 7. https://ml-cheatsheet.readthedocs.io/en/latest/logistic_regression.html
-# 
-# 8. https://en.wikipedia.org/wiki/Sigmoid_function
-# 
-# 9. https://www.statisticssolutions.com/assumptions-of-logistic-regression/
-# 
-# 10. https://www.kaggle.com/mnassrib/titanic-logistic-regression-with-python
-# 
-# 11. https://www.kaggle.com/neisha/heart-disease-prediction-using-logistic-regression
-# 
-# 12. https://www.ritchieng.com/machine-learning-evaluate-classification-model/
-# 
-
-
-# So, now we will come to the end of this kernel.
-# 
-# I hope you find this kernel useful and enjoyable.
-# 
-# Your comments and feedback are most welcome.
-# 
-# Thank you
-# 
-
-
-# [Go to Top](#0)
-
 
