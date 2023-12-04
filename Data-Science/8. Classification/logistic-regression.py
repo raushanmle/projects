@@ -131,149 +131,50 @@ from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
 
-
-
 # check the shape of X_train and X_test
-
 X_train.shape, X_test.shape
  
 # Feature Engineering is the process of transforming raw data into useful features that help us to understand our model better and increase its predictive power. I will carry out feature engineering on different types of variables.
-# 
-# 
-# First, I will display the categorical and numerical variables again separately.
-
-
-# check data types in X_train
-
-# display categorical variables
-
-categorical = [col for col in X_train.columns if X_train[col].dtypes == 'O']
-
-
-
-
-# display numerical variables
-
-numerical = [col for col in X_train.columns if X_train[col].dtypes != 'O']
-
-# ### Engineering missing values in numerical variables
-# 
-# 
-
-
-# check missing values in numerical variables in X_train
-
-X_train[numerical].isnull().sum()
-
-
-# check missing values in numerical variables in X_test
-
-X_test[numerical].isnull().sum()
-
-
-# print percentage of missing values in the numerical variables in training set
 
 for col in numerical:
-    if X_train[col].isnull().mean()>0:
-        print(col, round(X_train[col].isnull().mean(),4))
+    if df[col].isnull().mean()>0:
+        print(col, round(df[col].isnull().mean(),4))
 
 
 # ### Assumption
-# 
-# 
 # I assume that the data are missing completely at random (MCAR). There are two methods which can be used to impute missing values. One is mean or median imputation and other one is random sample imputation. When there are outliers in the dataset, we should use median imputation. So, I will use median imputation because median imputation is robust to outliers.
-# 
-# 
+
 # I will impute missing values with the appropriate statistical measures of the data, in this case median. Imputation should be done over the training set, and then propagated to the test set. It means that the statistical measures to be used to fill missing values both in train and test set, should be extracted from the train set only. This is to avoid overfitting.
 
-
-# impute missing values in X_train and X_test with respective column median in X_train
-
-for df1 in [X_train, X_test]:
-    for col in numerical:
-        col_median=X_train[col].median()
-        df1[col].fillna(col_median, inplace=True)           
+for col in numerical:
+    col_median=df[col].median()
+    df[col].fillna(col_median, inplace=True)           
       
-
-
-# check again missing values in numerical variables in X_train
-
-X_train[numerical].isnull().sum()
-
-
-# check missing values in numerical variables in X_test
-
-X_test[numerical].isnull().sum()
-
-
-# Now, we can see that there are no missing values in the numerical columns of training and test set.
-
+# check again missing values in numerical variables in df
+df[numerical].isnull().sum()
+# Now, we can see that there are no missing values in the numerical columns.
 
 # ### Engineering missing values in categorical variables
-
-
 # print percentage of missing values in the categorical variables in training set
-
-X_train[categorical].isnull().mean()
-
-
 # print categorical variables with missing data
-
-for col in categorical:
-    if X_train[col].isnull().mean()>0:
-        print(col, (X_train[col].isnull().mean()))
-
+df[categorical].isnull().mean()
 
 # impute missing categorical variables with most frequent value
-
-for df2 in [X_train, X_test]:
-    df2['WindGustDir'].fillna(X_train['WindGustDir'].mode()[0], inplace=True)
-    df2['WindDir9am'].fillna(X_train['WindDir9am'].mode()[0], inplace=True)
-    df2['WindDir3pm'].fillna(X_train['WindDir3pm'].mode()[0], inplace=True)
-    df2['RainToday'].fillna(X_train['RainToday'].mode()[0], inplace=True)
-
+for cat_col in categorical:
+    df[cat_col].fillna(df[cat_col].mode()[0], inplace=True)
 
 # check missing values in categorical variables in X_train
-
-X_train[categorical].isnull().sum()
-
-
-# check missing values in categorical variables in X_test
-
-X_test[categorical].isnull().sum()
-
-
-# As a final check, I will check for missing values in X_train and X_test.
-
-
-# check missing values in X_train
-
-X_train.isnull().sum()
-
-
-# check missing values in X_test
-
-X_test.isnull().sum()
-
-
-# We can see that there are no missing values in X_train and X_test.
-
+df[categorical].isnull().sum()
 
 # ### Engineering outliers in numerical variables
-# 
-# 
-# We have seen that the `Rainfall`, `Evaporation`, `WindSpeed9am` and `WindSpeed3pm` columns contain outliers. I will use top-coding approach to cap maximum values and remove outliers from the above variables.
 
+# We have seen that the `Rainfall`, `Evaporation`, `WindSpeed9am` and `WindSpeed3pm` columns contain outliers. I will use top-coding approach to cap maximum values and remove outliers from the above variables.
 
 def max_value(df3, variable, top):
     return np.where(df3[variable]>top, top, df3[variable])
 
-for df3 in [X_train, X_test]:
-    df3['Rainfall'] = max_value(df3, 'Rainfall', 3.2)
-    df3['Evaporation'] = max_value(df3, 'Evaporation', 21.8)
-    df3['WindSpeed9am'] = max_value(df3, 'WindSpeed9am', 55)
-    df3['WindSpeed3pm'] = max_value(df3, 'WindSpeed3pm', 57)
-
+for num_var in numerical:
+    df[num_var] = max_value(df, num_var, 3.2)
 
 X_train.Rainfall.max(), X_test.Rainfall.max()
 
