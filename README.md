@@ -25,7 +25,7 @@ Myself Raushan Kumar, an energetic professional with a comprehensive background 
 
 ## Professional Career
 
-- Data Scientist, [Ab - InBev](https://en.wikipedia.org/wiki/AB_InBev) ( Oct 202 - Present )
+- Data Scientist, [Ab - InBev](https://en.wikipedia.org/wiki/AB_InBev) ( Oct 2020 - Present )
 - Lead Data Analyst, [Amazon](https://en.wikipedia.org/wiki/Amazon_(company)) ( May 2017 - Oct 2020 )
 
 
