@@ -1,7 +1,6 @@
 import json
 
 from pydantic import BaseModel
-from typing import Optional
 
 
 class TripInput(BaseModel):
@@ -16,9 +15,9 @@ class TripOutput(TripInput):
 
 class CarInput(BaseModel):
     size: str
-    fuel: Optional[str] = "electric"
+    fuel: str | None = "electric"
     doors: int
-    transmission: Optional[str] = "auto"
+    transmission: str | None = "auto"
 
     class Config:
         json_schema_extra = {
@@ -39,9 +38,9 @@ class CarOutput(CarInput):
 def load_db() -> list[CarOutput]:
     """Load a list of Car objects from a JSON file"""
     with open("C:\\Code\\projects\\fastapi\\cars.json") as f:
-        return [CarOutput.BaseModel(obj) for obj in json.load(f)]
+        return [CarOutput.model_validate(obj) for obj in json.load(f)]
 
 
 def save_db(cars: list[CarOutput]):
-    with open("cars.json", 'w') as f:
-        json.dump([car.BaseModel() for car in cars], f, indent=4)
+    with open("C:\\Code\\projects\\fastapi\\cars.json", 'w') as f:
+        json.dump([car.model_dump() for car in cars], f, indent=4)
