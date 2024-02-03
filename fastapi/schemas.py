@@ -37,10 +37,10 @@ class CarOutput(CarInput):
 
 def load_db() -> list[CarOutput]:
     """Load a list of Car objects from a JSON file"""
-    with open("C:\\Code\\projects\\fastapi\\cars.json") as f:
+    with open("cars.json") as f:
         return [CarOutput.model_validate(obj) for obj in json.load(f)]
 
 
 def save_db(cars: list[CarOutput]):
-    with open("C:\\Code\\projects\\fastapi\\cars.json", 'w') as f:
+    with open("cars.json", 'w') as f:
         json.dump([car.model_dump() for car in cars], f, indent=4)
