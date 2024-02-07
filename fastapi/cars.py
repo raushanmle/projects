@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from typing import List
 class carinput(BaseModel):
     size: str
     fuel: str
@@ -61,7 +61,7 @@ def save_db(cars):
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
-app = FastAPI(title="Car Sharing")
+app = FastAPI(title="Car Sharing API Testing")
 @app.get("/api/cars/{id}")
 def car_by_id(id: int) -> dict:
     result = [car for car in cr if car["id"] == id]
@@ -95,6 +95,39 @@ def change_car(id: int, new_data:dict):
         return car
     else:
         raise HTTPException(status_code=404, detail=f"No car with id={id}.")
+
+# @app.post("/api/cars/")
+# def add_car(car: dict):
+#     new_car = {"size": car["size"], "doors":car["doors"],"fuel":car["fuel"], "transmission":car["transmission"],"trips":[], "id":len(db)+1}
+
+#     db.append(new_car)
+#     save_db(db)
+#     return {"Entry added": new_car}
+
+class CarInput(BaseModel):
+    size: str
+    doors: int
+    fuel: str
+    transmission: str
+    trips: List[str] = []
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "size": "m",
+                "doors": 5,
+                "transmission": "manual",
+                "fuel": "hybrid"
+            }
+        }
+
+@app.post("/api/cars/")
+def add_car(car: CarInput):
+    new_car = car.dict()
+    new_car["id"] = len(db) + 1
+    db.append(new_car)
+    save_db(db)
+    return {"Entry added": new_car}
 
 
 if __name__ == "__main__":
