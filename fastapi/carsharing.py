@@ -1,15 +1,10 @@
+from pydantic import BaseModel
+import json
 import uvicorn
 from fastapi import FastAPI, HTTPException
-
 from schemas import load_db, save_db, CarInput, CarOutput, TripOutput, TripInput
 
 app = FastAPI(title="Car Sharing")
-
-
-import json
-
-from pydantic import BaseModel
-
 
 class TripInput(BaseModel):
     start: int
@@ -52,7 +47,6 @@ def load_db() -> list[CarOutput]:
 def save_db(cars: list[CarOutput]):
     with open("cars.json", 'w') as f:
         json.dump([car.model_dump() for car in cars], f, indent=4)
-
 
 
 db = load_db()
@@ -125,9 +119,9 @@ def add_trip(car_id: int, trip: TripInput) -> TripOutput:
         save_db(db)
         return new_trip
     else:
-        raise HTTPException(status_code=404, detail=f"No car with id={id}.")
+        raise HTTPException(status_code=202, detail=f"No car with id={id}.")
 
 
 if __name__ == "__main__":
     # uvicorn.run("carsharing:app", port = 8000, host = "0.0.0.0", reload= True)
-    uvicorn.run("carsharing:app", reload= True)
+    uvicorn.run("carsharing:app", reload=True)
