@@ -37,7 +37,7 @@ class CarOutput(CarInput):
 
 def load_db() -> list[CarOutput]:
     """Load a list of Car objects from a JSON file"""
-    with open("cars.json") as f:
+    with open("/cars.json") as f:
         return [CarOutput.model_validate(obj) for obj in json.load(f)]
 
 
