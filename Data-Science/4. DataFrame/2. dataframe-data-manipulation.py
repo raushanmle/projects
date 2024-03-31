@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 
-df = pd.read_excel("sample-df\\kc_housingdata.xlsx")
+df = pd.read_excel("sample-data\\kc_housingdata.xlsx")
 
 # We are going to learn basic operations on dataframe.
 # Get the first 5 rows of the dataframe
