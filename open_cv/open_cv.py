@@ -43,7 +43,3 @@ cv.destroyAllWindows()
 
 
 
-
-
-
-
