@@ -12,21 +12,23 @@
 
 ## About
 
-Myself Raushan Kumar, an energetic professional with a comprehensive background in analytics. Ability to handle multiple responsibilities, set priorities, communicate ideas to others, and respond positively to demanding situations.Experience in statistical tools and a keen communicator with strong problem solving, planning, presentation and people management skills.
+Myself Raushan Kumar, a dynamic professional with extensive experience in analytics. Skilled at managing multiple responsibilities, setting priorities, and effectively conveying ideas, I thrive in challenging environments. Proficient in statistical tools, I bring strong problem-solving, planning, presentation, and people management abilities, complemented by excellent communication skills.
 
 <table>
   <tr>
       <td><a href="https://github.com/mlconcept"><img src="https://img.shields.io/github/followers/mlconcept.svg?label=GitHub&style=social" alt="GitHub"></a></td>
     <td><a href="https://stackoverflow.com/users/12168683/raushan-kumar"><img src="https://img.shields.io/badge/Stack_Overflow-FE7A16?style=for-the-badge&logo=stack-overflow&logoColor=white" alt="Stackoverflow"></a></td>
-    <td><a href="https://www.linkedin.com/in/nitishraushan/"><img src="https://img.shields.io/badge/LinkedIn%20%7C%20nitishraushan--rrr_.svg?style=social&logo=linkedin" alt="LinkedIn"></a></td>
+    <td><a href="https://www.linkedin.com/in/mleraushan/"><img src="https://img.shields.io/badge/LinkedIn%20%7C%20mleraushan--rrr_.svg?style=social&logo=linkedin" alt="LinkedIn"></a></td>
     <td><a href="mailto:raushan94306@gmail.com"><img src="https://img.shields.io/badge/Gmail--_.svg?style=social&logo=gmail" alt="Gmail"></a></td>
   </tr>
 </table>
 
 ## Professional Career
-
-- Data Scientist, [Ab - InBev](https://en.wikipedia.org/wiki/AB_InBev) ( Oct 2020 - Present )
-- Lead Data Analyst, [Amazon](https://en.wikipedia.org/wiki/Amazon_(company)) ( May 2017 - Oct 2020 )
+- Senior Data Scientist & ML - Engineer, [AB InBev](https://en.wikipedia.org/wiki/AB_InBev) ( Oct 2023 - Present)
+- Data Scientist, [AB InBev](https://en.wikipedia.org/wiki/AB_InBev) ( Sept 2021 - Oct 2023)
+- Associate Data Scientist, [AB InBev](https://en.wikipedia.org/wiki/AB_InBev) ( Oct 2020 - Sept 2021 )
+- Lead Data Analyst, [Amazon](https://en.wikipedia.org/wiki/Amazon_(company)) ( Jan 2019 - Oct 2020 )
+- Data Quality Analyst, [Amazon](https://en.wikipedia.org/wiki/Amazon_(company)) ( May 2017 - Jan 2019 )
 
 
 ## 👬 I’m looking to contribute
