@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  rest_api_task:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    networks:
+      - rest_api_task
+
+networks:
+  rest_api_task:
+    driver: bridge
